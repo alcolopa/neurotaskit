@@ -3,14 +3,20 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasUuids;
 
     /**
      * The attributes that are mass assignable.
@@ -45,5 +51,25 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Get the tasks that are created by the user
+     *
+     * @return HasMany
+     */
+    public function createdTasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'owner_id');
+    }
+
+    /**
+     * Get the tasks that are assigned to the user
+     *
+     * @return HasMany
+     */
+    public function asignedTasks(): HasMany
+    {
+        return $this->hasMany(Task::class, 'assigned_to');
     }
 }
