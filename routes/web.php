@@ -15,6 +15,9 @@ Route::middleware([
     Route::get('dashboard', function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
+    Route::get('tasks', function () {
+        return Inertia::render('tasks/overview');
+    })->name('tasks');
 });
 
 require __DIR__.'/settings.php';
